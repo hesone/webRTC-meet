@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>webRTC-meet — Meeting</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body class="room">
+    <header class="topbar">
+      <div class="brand-mini">●<span id="roomLabel">room</span></div>
+      <div class="status" id="status" aria-live="polite">Connecting…</div>
+      <button id="copyLink" class="ghost small" title="Copy invite link">Copy link</button>
+    </header>
+
+    <main class="stage" id="stage">
+      <section class="tile" id="localTile">
+        <video id="localVideo" autoplay playsinline muted></video>
+        <div class="tile-label"><span id="localName">You</span> <em class="badges" id="localBadges"></em></div>
+      </section>
+      <section class="tile placeholder" id="remoteTile">
+        <video id="remoteVideo" autoplay playsinline></video>
+        <div class="empty" id="emptyState">
+          <div class="spinner"></div>
+          <p>Waiting for someone to join…</p>
+        </div>
+        <div class="tile-label"><span id="remoteName">Guest</span> <em class="badges" id="remoteBadges"></em></div>
+      </section>
+    </main>
+
+    <nav class="controls" aria-label="Call controls">
+      <button id="btnMic" class="ctl" aria-pressed="false" title="Mute (M)">
+        <span class="ico" data-on="🎤" data-off="🔇">🎤</span>
+      </button>
+      <button id="btnCam" class="ctl" aria-pressed="false" title="Camera (V)">
+        <span class="ico" data-on="📹" data-off="📷">📹</span>
+      </button>
+      <button id="btnShare" class="ctl" title="Share screen (S)">
+        <span class="ico">🖥️</span>
+      </button>
+      <button id="btnLeave" class="ctl danger" title="Leave (Esc)">
+        <span class="ico">📞</span>
+      </button>
+    </nav>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/room.js" type="module"></script>
+  </body>
+</html>

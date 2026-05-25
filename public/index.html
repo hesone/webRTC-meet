@@ -2,86 +2,34 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>WebRTC Meet</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>webRTC-meet — Start a meeting</title>
+    <link rel="stylesheet" href="/css/style.css" />
   </head>
-  <body>
-    <!-- Lobby -->
-    <section id="lobby" class="screen">
-      <div class="card">
-        <h1>Join a Meeting</h1>
-        <p class="subtitle">Enter a room name to start or join.</p>
-        <form id="join-form" autocomplete="off">
-          <input
-            id="room-input"
-            type="text"
-            placeholder="e.g. team-standup"
-            maxlength="40"
-            required
-          />
-          <button type="submit" id="join-btn">Join Room</button>
-        </form>
-        <p id="lobby-error" class="error" role="alert" aria-live="polite"></p>
+  <body class="lobby">
+    <main class="card">
+      <div class="brand">
+        <div class="logo">●</div>
+        <h1>webRTC-meet</h1>
       </div>
-    </section>
+      <p class="muted">Secure peer-to-peer video calls. No accounts. No tracking.</p>
 
-    <!-- Meeting -->
-    <section id="meeting" class="screen hidden">
-      <header class="top-bar">
-        <div class="room-info">
-          <span class="dot" id="status-dot" data-state="connecting"></span>
-          <strong id="room-name">—</strong>
-          <span id="status-text" class="muted">Connecting…</span>
+      <form id="joinForm" autocomplete="off" novalidate>
+        <label for="displayName">Your name</label>
+        <input id="displayName" name="displayName" maxlength="30" placeholder="e.g. Ada Lovelace" required />
+
+        <label for="room">Room name</label>
+        <div class="row">
+          <input id="room" name="room" maxlength="40" placeholder="team-standup" required pattern="[a-zA-Z0-9_\-]+" />
+          <button type="button" id="genRoom" class="ghost" title="Generate random room">⟳</button>
         </div>
-      </header>
+        <small class="hint">Letters, numbers, dashes and underscores only.</small>
 
-      <main class="stage">
-        <div class="tile" id="local-tile">
-          <video id="local-video" autoplay playsinline muted></video>
-          <div class="tile-overlay">
-            <span class="label">You</span>
-            <span class="badges">
-              <span class="badge mic" id="local-mic-badge" title="Microphone">🎤</span>
-              <span class="badge cam" id="local-cam-badge hidden" title="Camera">📷</span>
-            </span>
-          </div>
-        </div>
-
-        <div class="tile" id="remote-tile">
-          <video id="remote-video" autoplay playsinline></video>
-          <div class="tile-overlay">
-            <span class="label" id="remote-label">Waiting for guest…</span>
-            <span class="badges">
-              <span class="badge mic" id="remote-mic-badge" title="Microphone">🎤</span>
-            </span>
-          </div>
-          <div class="placeholder" id="remote-placeholder">
-            <div class="spinner"></div>
-            <p>Share the room name to invite someone.</p>
-          </div>
-        </div>
-      </main>
-
-      <footer class="controls" role="toolbar" aria-label="Meeting controls">
-        <button class="ctrl" id="btn-mic" aria-pressed="true" title="Mute (M)">
-          <span class="icon">🎤</span><span class="ctrl-label">Mute</span>
-        </button>
-        <button class="ctrl" id="btn-cam" aria-pressed="true" title="Camera (V)">
-          <span class="icon">📷</span><span class="ctrl-label">Camera</span>
-        </button>
-        <button class="ctrl" id="btn-share" aria-pressed="false" title="Share screen (S)">
-          <span class="icon">🖥️</span><span class="ctrl-label">Share</span>
-        </button>
-        <button class="ctrl danger" id="btn-leave" title="Leave (Esc)">
-          <span class="icon">📞</span><span class="ctrl-label">Leave</span>
-        </button>
-      </footer>
-
-      <div id="toast" class="toast" role="status" aria-live="polite"></div>
-    </section>
-
-    <script src="/socket.io/socket.io.js"></script>
-    <script type="module" src="app.js"></script>
+        <button type="submit" class="primary">Join meeting →</button>
+        <p id="error" class="error" role="alert" aria-live="polite"></p>
+      </form>
+    </main>
+    <footer class="footer">© webRTC-meet · End-to-end peer connection</footer>
+    <script src="/js/lobby.js" type="module"></script>
   </body>
 </html>
