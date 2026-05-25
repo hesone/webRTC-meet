@@ -40,6 +40,8 @@ app.use(compression());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: NODE_ENV === 'production' ? '1d' : 0 }));
 
+console.log(`Using ICE servers: ${JSON.stringify(ICE_SERVERS)}`);
+
 // Expose only safe runtime config to client
 app.get('/config', (_req, res) => {
   res.json({ iceServers: ICE_SERVERS, maxPeers: MAX_PEERS });
