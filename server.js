@@ -42,10 +42,31 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: NODE_ENV === 'p
 
 console.log(`Using ICE servers: ${JSON.stringify(ICE_SERVERS)}`);
 
-// Expose only safe runtime config to client
-app.get('/config', (_req, res) => {
-  res.json({ iceServers: ICE_SERVERS, maxPeers: MAX_PEERS });
+
+// Cloudflare TURN credentials endpoint
+app.get('/config', async (_req, res) => {
+  const response = await fetch(
+    `https://rtc.live.cloudflare.com/v1/turn/keys/${process.env.CF_TURN_KEY_ID}/credentials/generate-ice-servers`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.CF_API_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ttl: 86400 // 24h
+      })
+    }
+  );
+
+  const data = await response.json();
+  return res.json({ iceServers: data, maxPeers: MAX_PEERS });
 });
+
+// Expose only safe runtime config to client
+// app.get('/config', (_req, res) => {
+//   res.json({ iceServers: ICE_SERVERS, maxPeers: MAX_PEERS });
+// });
 
 app.get('/health', (_req, res) => res.json({ ok: true, uptime: process.uptime() }));
 
