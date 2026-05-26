@@ -40,8 +40,6 @@ app.use(compression());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: NODE_ENV === 'production' ? '1d' : 0 }));
 
-console.log(`Using ICE servers: ${JSON.stringify(ICE_SERVERS)}`);
-
 
 // Cloudflare TURN credentials endpoint
 app.get('/config', async (_req, res) => {
@@ -60,7 +58,7 @@ app.get('/config', async (_req, res) => {
   );
 
   const data = await response.json();
-  return res.json({ iceServers: data, maxPeers: MAX_PEERS });
+  return res.json({ iceServers: data.iceServers, maxPeers: MAX_PEERS });
 });
 
 // Expose only safe runtime config to client
