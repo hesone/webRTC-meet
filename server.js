@@ -41,29 +41,33 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: NODE_ENV === 'production' ? '1d' : 0 }));
 
 
-// Cloudflare TURN credentials endpoint
-try {
-  const response = fetch(
-    `https://rtc.live.cloudflare.com/v1/turn/keys/${process.env.CF_TURN_KEY_ID}/credentials/generate-ice-servers`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.CF_API_TOKEN}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ttl: 86400 // 24h
-      })
-    }
-  );
+const fetchCloudflareTurnCredentials = async () => {
+  try {
+    const response = await fetch(
+      `https://rtc.live.cloudflare.com/v1/turn/keys/${process.env.CF_TURN_KEY_ID}/credentials/generate-ice-servers`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.CF_API_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ttl: 86400 // 24h
+        })
+      }
+    );
 
-  const data = response.json();
-  console.log('Cloudflare TURN credentials response:', data);
-  ICE_SERVERS = data?.iceServers;
-  console.log('Fetched Cloudflare TURN credentials successfully');
-} catch (error) {
-  console.error('Failed to fetch Cloudflare TURN credentials:', error);
-}
+    const data = await response.json();
+    console.log('Cloudflare TURN credentials response:', data);
+    ICE_SERVERS = data?.iceServers;
+    console.log('Fetched Cloudflare TURN credentials successfully');
+  } catch (error) {
+    console.error('Failed to fetch Cloudflare TURN credentials:', error);
+  }
+};
+
+// Fetch TURN credentials at startup
+fetchCloudflareTurnCredentials();
 
 // Expose ICE servers and max peers config to client
 // Expose only safe runtime config to client
