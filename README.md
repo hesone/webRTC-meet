@@ -35,6 +35,8 @@ Open `http://localhost:3000` in **two browser windows / devices** and join the s
 | `NODE_ENV` | `development` | `production` enables asset caching |
 | `MAX_PEERS_PER_ROOM` | `2` | Hard cap per room |
 | `ICE_SERVERS` | Google STUN | JSON array of RTCIceServer objects |
+| `CF_API_TOKEN` | Cloudflare API Token | Optional. Used to generate Cloudflare TURN credentials; falls back to default ICE servers if omitted |
+| `CF_TURN_KEY_ID` | Cloudflare Key ID | Optional. Cloudflare TURN key identifier used with `CF_API_TOKEN` |
 
 ## License
 MIT
