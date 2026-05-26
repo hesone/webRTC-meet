@@ -18,6 +18,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: { origin: true, credentials: true },
   pingTimeout: 20000,
+  transports: ['websocket', 'get', 'post'],
 });
 
 // ─── Middleware ──────────────────────────────────────────────────────────
