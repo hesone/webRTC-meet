@@ -17,8 +17,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: { origin: true, credentials: true },
-  pingTimeout: 20000,
-  transports: ['websocket', 'get', 'post'],
+  pingTimeout: 20000
 });
 
 // ─── Middleware ──────────────────────────────────────────────────────────
@@ -59,7 +58,6 @@ const fetchCloudflareTurnCredentials = async () => {
     );
 
     const data = await response.json();
-    console.log('Cloudflare TURN credentials response:', data);
     ICE_SERVERS = data?.iceServers;
     console.log('Fetched Cloudflare TURN credentials successfully');
   } catch (error) {
