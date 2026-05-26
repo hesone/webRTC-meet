@@ -11,7 +11,7 @@ const { Server } = require('socket.io');
 const PORT = process.env.PORT || 3000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const MAX_PEERS = parseInt(process.env.MAX_PEERS_PER_ROOM || '2', 10);
-const ICE_SERVERS = JSON.parse(process.env.ICE_SERVERS || '[]');
+let ICE_SERVERS = JSON.parse(process.env.ICE_SERVERS || '[]');
 
 const app = express();
 const server = http.createServer(app);
@@ -42,7 +42,7 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: NODE_ENV === 'p
 
 
 // Cloudflare TURN credentials endpoint
-app.get('/config', async (_req, res) => {
+try {
   const response = await fetch(
     `https://rtc.live.cloudflare.com/v1/turn/keys/${process.env.CF_TURN_KEY_ID}/credentials/generate-ice-servers`,
     {
@@ -58,13 +58,17 @@ app.get('/config', async (_req, res) => {
   );
 
   const data = await response.json();
-  return res.json({ iceServers: data.iceServers, maxPeers: MAX_PEERS });
-});
+  ICE_SERVERS = data.iceServers;
+  console.log('Fetched Cloudflare TURN credentials successfully');
+} catch (error) {
+  console.error('Failed to fetch Cloudflare TURN credentials:', error);
+}
 
+// Expose ICE servers and max peers config to client
 // Expose only safe runtime config to client
-// app.get('/config', (_req, res) => {
-//   res.json({ iceServers: ICE_SERVERS, maxPeers: MAX_PEERS });
-// });
+app.get('/config', (_req, res) => {
+  res.json({ iceServers: ICE_SERVERS, maxPeers: MAX_PEERS });
+});
 
 app.get('/health', (_req, res) => res.json({ ok: true, uptime: process.uptime() }));
 
