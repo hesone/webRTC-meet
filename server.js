@@ -43,7 +43,7 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: NODE_ENV === 'p
 
 // Cloudflare TURN credentials endpoint
 try {
-  const response = await fetch(
+  const response = fetch(
     `https://rtc.live.cloudflare.com/v1/turn/keys/${process.env.CF_TURN_KEY_ID}/credentials/generate-ice-servers`,
     {
       method: "POST",
@@ -57,8 +57,9 @@ try {
     }
   );
 
-  const data = await response.json();
-  ICE_SERVERS = data.iceServers;
+  const data = response.json();
+  console.log('Cloudflare TURN credentials response:', data);
+  ICE_SERVERS = data?.iceServers;
   console.log('Fetched Cloudflare TURN credentials successfully');
 } catch (error) {
   console.error('Failed to fetch Cloudflare TURN credentials:', error);
